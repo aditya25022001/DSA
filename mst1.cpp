@@ -177,9 +177,6 @@ void bubbleSort(int arr[], int n){
             }
         }
     }
-    for(int i=0;i<n;++i){
-        cout<<arr[i]<<" ";
-    }
 }
 
 void insertionSort(int arr[], int n){
@@ -193,76 +190,4 @@ void insertionSort(int arr[], int n){
         }
         arr[j+1]=current;
     }
-    for(int i=0;i<n;++i){
-        cout<<arr[i]<<" ";
-    }
-}
-
-int main(){
-    int n, choice, found;
-    int arr[100];
-    cout<<"Menu"<<endl;
-    cout<<"________________________"<<endl;
-    cout<<"Bubble Sort : 1"<<endl;
-    cout<<"Insertion Sort : 2"<<endl;
-    cout<<"Binary Search : 3"<<endl;
-    cout<<"Linear Search : 4"<<endl;
-    cout<<"Enter choice : ";
-    cin>>choice;
-    switch(choice){
-        case 1 :
-            cout<<"Enter no of elements (max 100) : ";
-            cin>>n;
-            cout<<"Enter elements : "<<endl;
-            for(int i=0;i<n;++i){
-                cin>>arr[i];
-            }
-            bubbleSort(arr,n);
-            break;
-        case 2 :
-            cout<<"Enter no of elements (max 100) : ";
-            cin>>n;
-            cout<<"Enter elements : "<<endl;
-            for(int i=0;i<n;++i){
-                cin>>arr[i];
-            }
-            insertionSort(arr,n);
-            break;
-        case 3 :
-            cout<<"Enter no of elements in increasing order (max 100) : ";
-            cin>>n;
-            int searchItem;
-            cout<<"Enter elements : "<<endl;
-            for(int i=0;i<n;++i){
-                cin>>arr[i];
-            }
-            cout<<"Enter element to search : ";
-            cin>>searchItem;
-            found = binarySearch(arr,n,searchItem);
-            if(found==-1){
-                cout<<"Not present";
-            }
-            else{
-                cout<<"Found at index : "<<found;
-            }
-            break;
-        case 4 :
-            cout<<"Enter no of elements (max 100) : ";
-            cin>>n;
-            cout<<"Enter elements : "<<endl;
-            for(int i=0;i<n;++i){
-                cin>>arr[i];
-            }
-            cout<<"Enter element to search : ";
-            cin>>searchItem;
-            found = linearSearch(arr,n,searchItem);
-            if(found==-1){
-                cout<<"Not present";
-            }
-            else{
-                cout<<"Found at index : "<<found;
-            }
-            break;
-    }
-    return 0;
 }
