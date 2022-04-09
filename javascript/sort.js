@@ -96,6 +96,10 @@ const combSort = (arr) => {
 
 }
 
-const binaryInsertionSort = (arr) => {}
+const binaryInsertionSort = (arr) => {
 
-const bitonicSort = (arr) => {}
+}
+
+const bitonicSort = (arr) => {
+    
+}

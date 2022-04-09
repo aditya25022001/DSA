@@ -1,6 +1,8 @@
 class Graph {
     constructor() {
         this.adjacencyList = {};
+        this.dfsResult = []
+        this.visited = {}
     }
     
     addVertex(vertex) {
@@ -17,7 +19,6 @@ class Graph {
             this.addVertex(destination);
         }
         this.adjacencyList[source].push(destination);
-        this.adjacencyList[destination].push(source);
     }
     
     removeEdge(source, destination) {
@@ -53,20 +54,41 @@ class Graph {
     }
 
     dfs(start){
-        const result = [];
-        const visited = {};
-        const adjacencyList = this.adjacencyList;
-        (function dfs(vertex){
-        if (!vertex) return null;
-        visited[vertex] = true;
-        result.push(vertex);
-        adjacencyList[vertex].forEach(neighbor => {
-            if (!visited[neighbor]) {
-                return dfs(neighbor);
-            }
-        })
-        })(start);
-        return result;
+        if(!this.visited[start]){
+            this.visited[start] = true;
+            this.dfsResult.push(start);
+            this.adjacencyList[start].forEach(neighbor => {
+                this.dfs(neighbor);
+            })
+        }
+        return this.dfsResult
     }
 }
-  
+
+const graph = new Graph();
+graph.addVertex(1)
+graph.addVertex(2)
+graph.addVertex(3)
+graph.addVertex(4)
+graph.addVertex(5)
+graph.addVertex(6)
+graph.addEdge(1,2)
+graph.addEdge(1,3)
+graph.addEdge(1,6)
+graph.addEdge(2,1)
+graph.addEdge(2,3)
+graph.addEdge(2,4)
+graph.addEdge(3,1)
+graph.addEdge(3,2)
+graph.addEdge(3,4)
+graph.addEdge(3,6)
+graph.addEdge(4,2)
+graph.addEdge(4,3)
+graph.addEdge(4,5)
+graph.addEdge(5,4)
+graph.addEdge(5,6)
+graph.addEdge(6,1)
+graph.addEdge(6,5)
+graph.addEdge(6,3)
+console.log(graph.bfs(3))  
+console.log(graph.dfs(3))  
