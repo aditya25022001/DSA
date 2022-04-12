@@ -2,6 +2,7 @@
 #include<vector>
 #include<map>
 #include<queue>
+#include<stack>
 
 using namespace std;
 
@@ -10,14 +11,20 @@ class Graph{
         map <int,vector<int>> adj;
         int *visited;
         int vertices, temp, current, adjV;
-        queue<int> q;
+        queue<int> q; 
+        queue<pair<int,int>> cb;
+        vector<int> dfsVisited;
+        vector<int> dfsColor;
+        vector<int> inDegree;
     public:
-        
         Graph(int v){
             vertices = v;
             visited = new int[v+1]();
+            dfsVisited.resize(v+1,0);
+            dfsColor.resize(v+1,-1);
+            inDegree.resize(v+1,0);
         }
-        
+
         void takeInput(){
             for(int i=1;i<=vertices;++i){
                 cout<<"Enter no of adjacent vertices for vertex : "<<i<<": "<<endl;
@@ -28,18 +35,16 @@ class Graph{
                     adj[i].push_back(temp);
                 }
             }
-        }
+        }  
         
-        void displayList(){
-            for(int i=1;i<=adj.size();++i){
+        void calculateIndegree(){
+            for(int i=1;i<=vertices;++i){
                 for(auto j=adj[i].begin();j!=adj[i].end();++j){
-                    cout<<*j<<" ";
+                    inDegree[*j]+=1;
                 }
-                cout<<endl;
             }
         }
-        
-        // TC : O(N+E) SC : O(N+E)+O(N)+O(N)        
+
         void dfs(int start){
             if(visited[start]==0){
                 visited[start]=1;
@@ -49,8 +54,7 @@ class Graph{
                 }
             }
         }
-        
-        // TC : O(N+E) SC : O(N+E)+O(N)+O(N)
+    
         void bfs(int start){
             visited = new int[vertices+1]();
             cout<<start<<"->";
@@ -68,8 +72,118 @@ class Graph{
                 }
             } 
         }
+
+        bool cycleBfsUndirected(int start){
+            visited = new int[vertices+1]{0};
+            visited[start] =1;
+            cb.push({start,-1});
+            while(!cb.empty()){
+                int cur = cb.front().first;
+                int parent = cb.front().second;
+                cb.pop();
+                for(auto i=adj[cur].begin();i!=adj[cur].end();++i){
+                    if(visited[*i]==0){
+                        visited[*i]=1;
+                        cb.push({*i,cur});
+                    }
+                    else{
+                        if(parent!=*i){
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        bool cycleDfsUndirected(int start, int parent){
+            if(visited[start]==0){
+                visited[start]=1;
+                for(auto i=adj[start].begin();i!=adj[start].end();++i){
+                    if(visited[*i]==0){
+                        cycleDfsUndirected(*i,start);
+                    }
+                    else{
+                        if(parent!=*i){
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        bool bipartiteBfs(int start){
+            visited = new int[vertices+1]{0};
+            int* visitedColor = new int[vertices+1]{-1};
+            visited[start] = 1;
+            queue<pair<int,bool>> color;
+            color.push({start,0});
+            visitedColor[start] = 0;
+            while(!color.empty()){
+                int cur = color.front().first;
+                int c = color.front().second;
+                color.pop();
+                for(auto i=adj[cur].begin();i!=adj[cur].end();++i){
+                    if(visited[*i]==0){
+                        visited[*i]=1;
+                        color.push({*i,!c});
+                        visitedColor[*i]=!c;
+                    }
+                    else{
+                        if(c==visitedColor[*i]){
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+
+        bool bipartiteDfs(int start, int c){
+            dfsColor[start]=c;
+            for(auto i=adj[start].begin();i!=adj[start].end();++i){
+                if(dfsColor[*i]==-1){
+                    if(!bipartiteDfs(*i,1-c)){
+                        return false;
+                    }
+                }                
+                else{
+                    if(dfsColor[*i]==c){
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        bool cycleDfsDirected(int start){
+            visited[start]=dfsVisited[start]=1;
+            for(auto i=adj[start].begin(); i!=adj[start].end();++i){
+                if(visited[*i]==0){
+                    return cycleDfsDirected(*i);
+                }
+                else{
+                    if(dfsVisited[*i]==1){
+                        return true;
+                    }
+                }
+            }
+            dfsVisited[start]=false;
+            return false;
+        }
+
+        bool cycleBfsDirected(int start){
+            
+        }
+
+        void topologicalSortDfs(){
+            
+        }
         
-        void topologicalSort(){}
+        void topologicalSortBfs(){
+
+        }
         
         void prims(){}
         
@@ -88,8 +202,9 @@ int main(){
     cin>>vertices;
     Graph g = Graph(vertices);
     g.takeInput();
-    g.displayList();
-    g.dfs(2);
-    g.bfs(3);
+    g.calculateIndegree();
     return 0;
 }
+
+// Topological sort -> Linear ordering of vertices such that if u->v is an edge the u comes before v in the ordering
+// Bipartite graph -> If a graph has odd length cycle it is not bipartite graph else it is, such a graph that can be coloured using two colors such that no two adjacent vertices have same color

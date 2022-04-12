@@ -16,9 +16,7 @@ int fibonacci(int n){
         if(dp[n]!=-1){
             return dp[n];
         }
-        else{
-            return dp[n] = fibonacci(n-1)+fibonacci(n-2);
-        }
+        return dp[n] = fibonacci(n-1)+fibonacci(n-2);
     }
 }
 
