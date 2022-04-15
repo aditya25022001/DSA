@@ -16,6 +16,8 @@ class Graph{
         vector<int> dfsVisited;
         vector<int> dfsColor;
         vector<int> inDegree;
+        stack<int> topoSortDfs;
+        vector<int> topoSortBfs;
     public:
         Graph(int v){
             vertices = v;
@@ -38,6 +40,7 @@ class Graph{
         }  
         
         void calculateIndegree(){
+            inDegree.clear();
             for(int i=1;i<=vertices;++i){
                 for(auto j=adj[i].begin();j!=adj[i].end();++j){
                     inDegree[*j]+=1;
@@ -173,23 +176,104 @@ class Graph{
             return false;
         }
 
-        bool cycleBfsDirected(int start){
-            
+        bool cycleBfsDirected(){
+            calculateIndegree();
+            queue<int> bfsTopo;
+            int current;
+            int visCount=0;
+            for(int i=1;i<=vertices;++i){
+                if(inDegree[i]==0){
+                    bfsTopo.push(i);
+                }
+            }
+            while(!bfsTopo.empty()){
+                current = bfsTopo.front();
+                bfsTopo.pop();
+                visCount++;
+                for(auto i=adj[current].begin();i!=adj[current].end();++i){
+                    inDegree[*i]-=1;
+                    if(inDegree[*i]==0){
+                        bfsTopo.push(*i);
+                    }
+                }
+            }
+            return visCount!=vertices;
         }
 
+        void topologicalSortDfsUtility(int start){
+            visited[start]=1;
+            for(auto i=adj[start].begin();i!=adj[start].end();++i){
+                if(visited[*i]==0){
+                    topologicalSortDfsUtility(*i);
+                }
+            }
+            topoSortDfs.push(start);
+        }
+        
         void topologicalSortDfs(){
-            
+            for(int i=1;i<=vertices;++i){
+                if(visited[i]==0){
+                    topologicalSortDfsUtility(i);
+                }
+            }
+            while(!topoSortDfs.empty()){
+                cout<<topoSortDfs.top()<<" ";
+                topoSortDfs.pop();
+            }
+            cout<<endl;
         }
         
         void topologicalSortBfs(){
+            int visCount = 0;
+            calculateIndegree();
+            queue<int> bfsTopo;
+            int current;
+            for(int i=1;i<=vertices;++i){
+                if(inDegree[i]==0){
+                    bfsTopo.push(i);
+                }
+            }
+            while(!bfsTopo.empty()){
+                current = bfsTopo.front();
+                bfsTopo.pop();
+                topoSortBfs.push_back(current);
+                visCount++;
+                for(auto i=adj[current].begin();i!=adj[current].end();++i){
+                    inDegree[*i]-=1;
+                    if(inDegree[*i]==0){
+                        bfsTopo.push(*i);
+                    }
+                }
+            }
+            if(visCount==vertices){
+                for(auto i=topoSortBfs.begin();i!=topoSortBfs.end();++i){
+                    cout<<*i<<" ";
+                }
+            }
+            else{
+                cout<<"Not possible";
+            }
+        }
+        
+        int shortestDistanceUnweighted(int source){
+            vector<int> distance(vertices+1,INT_MAX);
+            queue<int> nodes;
+            nodes.push(source);
+            distance[source] = 0;
+            
+        }
+
+        void prims(){
 
         }
         
-        void prims(){}
+        void kruskal(){
+
+        }
         
-        void kruskal(){}
-        
-        void dijkstra(){}
+        void dijkstra(){
+            
+        }
         
         ~Graph(){
             delete visited;
@@ -202,9 +286,10 @@ int main(){
     cin>>vertices;
     Graph g = Graph(vertices);
     g.takeInput();
-    g.calculateIndegree();
     return 0;
 }
 
 // Topological sort -> Linear ordering of vertices such that if u->v is an edge the u comes before v in the ordering
 // Bipartite graph -> If a graph has odd length cycle it is not bipartite graph else it is, such a graph that can be coloured using two colors such that no two adjacent vertices have same color
+// In finding topological sort using DFS we used utility function for each recursion call for every node( vertex, edge )
+// Do the same for each function i.e. there might be components in graph so to take in count every component use main function to iterate through the vertices and if not visited do the required function

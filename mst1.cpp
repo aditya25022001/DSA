@@ -192,3 +192,7 @@ void insertionSort(int arr[], int n){
     }
 }
 
+// 
+// a:active{
+//   -webkit-tap-highlight-color: transparent !important;
+// }
