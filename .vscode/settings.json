@@ -2,6 +2,7 @@
     "files.associations": {
         "*.py": "python",
         "vector": "cpp",
-        "xutility": "cpp"
+        "xutility": "cpp",
+        "iostream": "cpp"
     }
 }
