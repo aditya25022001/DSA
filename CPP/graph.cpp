@@ -361,3 +361,4 @@ int main(){
 // Do the same for each function i.e. there might be components in graph so to take in count every component use main function to iterate through the vertices and if not visited do the required function
 // Dijkstra can handle cycle and any weighted graph but not negative weights
 // minimum spanning tree -> N nodes and E-1 edges and every node is reachable from any node of the tree and the cost of tree is least in all possible trees
+// In cycle detection of undirected graph run the algorithm for every vertex and return accordingly
