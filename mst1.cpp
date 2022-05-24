@@ -1,5 +1,7 @@
 #include<iostream>
 #include<math.h>
+#include<string>
+#include<algorithm>
 
 using namespace std;
 
@@ -191,6 +193,12 @@ void insertionSort(int arr[], int n){
         arr[j+1]=current;
     }
 }
+
+int main(){
+    string a = "aditya";
+    cout<<count(a.begin(), a.end(),'a');
+}
+
 
 // 
 // a:active{

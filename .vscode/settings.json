@@ -3,6 +3,8 @@
         "*.py": "python",
         "vector": "cpp",
         "xutility": "cpp",
-        "iostream": "cpp"
-    }
+        "iostream": "cpp",
+        "cstring": "cpp"
+    },
+    "jupyter.jupyterServerType": "local"
 }
