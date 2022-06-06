@@ -160,16 +160,17 @@ class Graph{
             return true;
         }
 
-        bool bipartiteDfs(int start, int c){
-            dfsColor[start]=c;
-            for(auto i=adj[start].begin();i!=adj[start].end();++i){
-                if(dfsColor[(*i).first]==-1){
-                    if(!bipartiteDfs((*i).first,1-c)){
+        bool bipartiteDfs(int start){
+            if(dfsColor[start]==-1) dfsColor[start]=1;
+            for(auto i:adj[start]){
+                if(dfsColor[i.first]==-1){
+                    dfsColor[i.first]=1-dfsColor[start];
+                    if(!bipartiteDfs(i.first)){
                         return false;
                     }
                 }                
                 else{
-                    if(dfsColor[(*i).first]==c){
+                    if(dfsColor[i.first]==dfsColor[start]){
                         return false;
                     }
                 }
@@ -316,10 +317,10 @@ class Graph{
             while(!p.empty()){
                 current = p.top().second;
                 p.pop();
-                for(auto i=adj[current].begin(); i!=adj[current].end();++i){
-                    if(distance[(*i).first]>distance[current]+(*i).second){
-                        distance[(*i).first] = distance[current]+(*i).second;
-                        p.push({ distance[current]+(*i).second, (*i).first });
+                for(auto i:adj[current]){
+                    if(distance[i.first]>distance[current]+i.second){
+                        distance[i.first] = distance[current]+i.second;
+                        p.push({ distance[current]+i.second, i.first });
                     }
                 }                
             }
@@ -327,10 +328,7 @@ class Graph{
         }
 
         int prims(){
-            priority_queue<pair<int, int>, vector<pair<int,int>>, greater<pair<int,int>>> p;
-            vector<int> mst(vertices+1, false);
-            vector<int> parent(vertices+1, -1);
-            mst[1]=true, p.push({ 0, 0 });
+
         }
         
         void kruskal(){
@@ -361,4 +359,4 @@ int main(){
 // Do the same for each function i.e. there might be components in graph so to take in count every component use main function to iterate through the vertices and if not visited do the required function
 // Dijkstra can handle cycle and any weighted graph but not negative weights
 // minimum spanning tree -> N nodes and E-1 edges and every node is reachable from any node of the tree and the cost of tree is least in all possible trees
-// In cycle detection of undirected graph run the algorithm for every vertex and return accordingly
+// In cycle detection of undirected graph run the algorithm for every vertex and return accordingly 

@@ -4,6 +4,13 @@
 
 using namespace std;
 
+int f(int i, int j, int& m, int& n, string& a, string& b, vector<vector<int>>& d){
+    if(i>=m || j>=n) return 0;
+    if(d[i][j]!=-1) return d[i][j];
+    if(a.at(i)==b.at(j)) return d[i][j]=1+f(i+1,j+1,m,n,a,b,d);
+    else return d[i][j] = max(f(i+1,j,m,n,a,b,d),f(i,j+1,m,n,a,b,d));
+}
+
 int longestCommonSubsequence(string text1, string text2) {
     int t1 = text1.length()+1, t2 = text2.length()+1;
     int dp[100][100];
@@ -24,4 +31,16 @@ int longestCommonSubsequence(string text1, string text2) {
         }
     }
     return dp[t1-1][t2-1];
+}
+
+int main(){
+    string a="abcdef";
+    string b="ace";
+    cout<<longestCommonSubsequence(a,b);
+    vector<vector<int>> d(6,vector<int>(3,-1));
+    int m=a.length();
+    int n=b.length();
+    cout<<'\n';
+    cout<<f(0,0,m,n,a,b,d);
+    return 0;
 }
