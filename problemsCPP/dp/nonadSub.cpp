@@ -23,4 +23,4 @@ int main(){
     vector<int> arr={5, 5, 10, 100, 10, 5};
     cout<<findMaxSum(arr,6);
     return 0;
-}
+}                                                                   

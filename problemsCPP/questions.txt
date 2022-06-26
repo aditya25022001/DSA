@@ -1,0 +1,32 @@
+given array of n integers 
+perform two operations select i, j (i!=j)
+A[i]&A[j]=X
+A[i]=A[i]^X
+A[j]=A[j]^X
+check if the array can be converted to 0
+approach --> check each of 32 bits in every number if no of ones in a bit position is even then true else false
+
+different bits sum pairwise
+
+single number ii
+
+longest substring without repeating characters //hashmap two pointer
+
+square root without sqrt
+
+factorial trailing zeroes (approach count no of 5s in the number 25 -> 2 5s)
+void f(){
+    int c=0;
+    int p=5;
+    while(n/p>=1){
+        c+=n/p;
+        p*=5;
+    }
+    return c;
+}
+
+Median of 2d matrix
+
+Palindrome partitioning
+
+Maximum sum of subsequence without adjacent

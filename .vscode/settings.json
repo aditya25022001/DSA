@@ -4,7 +4,8 @@
         "vector": "cpp",
         "xutility": "cpp",
         "iostream": "cpp",
-        "cstring": "cpp"
+        "cstring": "cpp",
+        "unordered_set": "cpp"
     },
     "jupyter.jupyterServerType": "local"
 }

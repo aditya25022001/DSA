@@ -21,7 +21,9 @@ class Graph{
         vector<int> inDegree;
         stack<int> topoSortDfs;
         vector<int> topoSortBfs;
-        vector<pair<int,int>> primMst; 
+        vector<pair<int,int>> primMst;
+        vector<int> rank;
+        vector<int> parent; 
     public:
         Graph(int v){
             vertices = v;
@@ -29,9 +31,21 @@ class Graph{
             dfsVisited.resize(v+1,0);
             dfsColor.resize(v+1,-1);
             inDegree.resize(v+1,0);
+            rank.resize(v+1,0);
+            parent.resize(v+1,0);
+            for(int i=0;i<=vertices; ++i) parent[i]=i;
+            adj={
+                {1,{{5,4},{2,2},{4,1}}},
+                {2,{{1,2},{3,3},{4,3},{6,7}}},
+                {3,{{2,3},{4,5},{6,8}}},
+                {4,{{5,9},{2,3},{3,5},{1,1}}},
+                {5,{{1,4},{4,9}}},
+                {6,{{2,7},{3,8}}},
+            };
         }
 
         void takeInput(bool weighted){
+            adj.clear();
             if(!weighted){
                 for(int i=1;i<=vertices;++i){
                     cout<<"Enter no of adjacent vertices for vertex : "<<i<<": "<<endl;
@@ -59,8 +73,8 @@ class Graph{
         void calculateIndegree(){
             inDegree.clear();
             for(int i=1;i<=vertices;++i){
-                for(auto j=adj[i].begin();j!=adj[i].end();++j){
-                    inDegree[(*j).first]+=1;
+                for(auto j:adj[i]){
+                    inDegree[j.first]+=1;
                 }
             }
         }
@@ -69,8 +83,8 @@ class Graph{
             if(visited[start]==0){
                 visited[start]=1;
                 cout<<start<<"->";
-                for(auto i=adj[start].begin();i!=adj[start].end();++i){
-                    dfs((*i).first);
+                for(auto i:adj[start]){
+                    dfs(i.first);
                 }
             }
         }
@@ -83,11 +97,11 @@ class Graph{
             while(!q.empty()){
                 current = q.front();
                 q.pop();
-                for(auto i=adj[current].begin();i!=adj[current].end();++i){
-                    if(visited[(*i).first]==0){
-                        cout<<(*i).first<<"->";
-                        q.push((*i).first);
-                        visited[(*i).first]=1;
+                for(auto i:adj[current]){
+                    if(visited[i.first]==0){
+                        cout<<i.first<<"->";
+                        q.push(i.first);
+                        visited[i.first]=1;
                     }
                 }
             } 
@@ -101,13 +115,13 @@ class Graph{
                 int cur = cb.front().first;
                 int parent = cb.front().second;
                 cb.pop();
-                for(auto i=adj[cur].begin();i!=adj[cur].end();++i){
-                    if(visited[(*i).first]==0){
-                        visited[(*i).first]=1;
-                        cb.push({(*i).first,cur});
+                for(auto i:adj[cur]){
+                    if(visited[i.first]==0){
+                        visited[i.first]=1;
+                        cb.push({i.first,cur});
                     }
                     else{
-                        if(parent!=(*i).first){
+                        if(parent!=i.first){
                             return true;
                         }
                     }
@@ -119,12 +133,12 @@ class Graph{
         bool cycleDfsUndirected(int start, int parent){
             if(visited[start]==0){
                 visited[start]=1;
-                for(auto i=adj[start].begin();i!=adj[start].end();++i){
-                    if(visited[((*i).first)]==0){
-                        cycleDfsUndirected((*i).first,start);
+                for(auto i:adj[start]){
+                    if(visited[i.first]==0){
+                        cycleDfsUndirected(i.first,start);
                     }
                     else{
-                        if(parent!=(*i).first){
+                        if(parent!=i.first){
                             return true;
                         }
                     }
@@ -144,14 +158,14 @@ class Graph{
                 int cur = color.front().first;
                 int c = color.front().second;
                 color.pop();
-                for(auto i=adj[cur].begin();i!=adj[cur].end();++i){
-                    if(visited[(*i).first]==0){
-                        visited[(*i).first]=1;
-                        color.push({(*i).first,!c});
-                        visitedColor[(*i).first]=!c;
+                for(auto i:adj[cur]){
+                    if(visited[i.first]==0){
+                        visited[i.first]=1;
+                        color.push({i.first,!c});
+                        visitedColor[i.first]=!c;
                     }
                     else{
-                        if(c==visitedColor[(*i).first]){
+                        if(c==visitedColor[i.first]){
                             return false;
                         }
                     }
@@ -180,16 +194,9 @@ class Graph{
 
         bool cycleDfsDirected(int start){
             visited[start]=dfsVisited[start]=1;
-            for(auto i=adj[start].begin(); i!=adj[start].end();++i){
-                if(visited[(*i).first]==0){
-                    return cycleDfsDirected((*i).first);
-                }
-                else{
-                    if(dfsVisited[(*i).first]==1){
-                        return true;
-                    }
-                }
-            }
+            for(auto i:adj[start])
+                if(visited[i.first]==0) return cycleDfsDirected(i.first);
+                else if(dfsVisited[i.first]==1) return true;
             dfsVisited[start]=false;
             return false;
         }
@@ -208,10 +215,10 @@ class Graph{
                 current = bfsTopo.front();
                 bfsTopo.pop();
                 visCount++;
-                for(auto i=adj[current].begin();i!=adj[current].end();++i){
-                    inDegree[(*i).first]-=1;
-                    if(inDegree[(*i).first]==0){
-                        bfsTopo.push((*i).first);
+                for(auto i:adj[current]){
+                    inDegree[i.first]-=1;
+                    if(inDegree[i.first]==0){
+                        bfsTopo.push(i.first);
                     }
                 }
             }
@@ -220,9 +227,9 @@ class Graph{
 
         void topologicalSortDfsUtility(int start){
             visited[start]=1;
-            for(auto i=adj[start].begin();i!=adj[start].end();++i){
-                if(visited[(*i).first]==0){
-                    topologicalSortDfsUtility((*i).first);
+            for(auto i:adj[start]){
+                if(visited[i.first]==0){
+                    topologicalSortDfsUtility(i.first);
                 }
             }
             topoSortDfs.push(start);
@@ -256,21 +263,15 @@ class Graph{
                 bfsTopo.pop();
                 topoSortBfs.push_back(current);
                 visCount++;
-                for(auto i=adj[current].begin();i!=adj[current].end();++i){
-                    inDegree[(*i).first]-=1;
-                    if(inDegree[(*i).first]==0){
-                        bfsTopo.push((*i).first);
+                for(auto i:adj[current]){
+                    inDegree[i.first]-=1;
+                    if(inDegree[i.first]==0){
+                        bfsTopo.push(i.first);
                     }
                 }
             }
-            if(visCount==vertices){
-                for(auto i=topoSortBfs.begin();i!=topoSortBfs.end();++i){
-                    cout<<*i<<" ";
-                }
-            }
-            else{
-                cout<<"Not possible";
-            }
+            if(visCount==vertices) for(auto i:topoSortBfs) cout<<i<<" ";
+            else cout<<"Not possible";
         }
         
         int shortestDistanceUnweighted(int source, int destination){
@@ -282,10 +283,10 @@ class Graph{
             while(!nodes.empty()){
                 current = nodes.front();
                 nodes.pop();
-                for(auto i=adj[current].begin();i!=adj[current].end();++i){
-                    if(distance[(*i).first]>distance[current]+1){
-                        distance[(*i).first] = distance[current]+1;
-                        nodes.push((*i).first);
+                for(auto i:adj[current]){
+                    if(distance[i.first]>distance[current]+1){
+                        distance[i.first] = distance[current]+1;
+                        nodes.push(i.first);
                     }
                 }
             }
@@ -296,15 +297,10 @@ class Graph{
             topologicalSortBfs();
             vector<int> distance(vertices+1,INT_MAX);
             distance[source]=0;
-            for(auto i=topoSortBfs.begin();i!=topoSortBfs.end();++i){
-                if(distance[*i]!=INT_MAX){
-                    for(auto j=adj[*i].begin();j!=adj[*i].end();++j){
-                        if(distance[(*j).first]>distance[*i]+(*j).second){
-                            distance[(*j).first]=distance[*i]+(*j).second;
-                        }   
-                    }
-                }                
-            }
+            for(auto i:topoSortBfs)
+                if(distance[i]!=INT_MAX)
+                    for(auto j:adj[i])
+                        distance[j.first]=min(distance[i]+j.second,distance[j.first]);
             return distance[destination];
         }
         
@@ -330,9 +326,41 @@ class Graph{
         int prims(){
 
         }
-        
-        void kruskal(){
 
+        void makeUnion(int u, int v){
+            u=findParent(u);
+            v=findParent(v);
+            if(rank[u]<rank[v]) parent[u]=v;
+            else if(rank[v]<rank[u]) parent[v]=u;
+            else {
+                parent[v]=u;
+                rank[u]++;
+            }
+        }
+
+        int findParent(int u){
+            if(parent[u]==u) return u;
+            return parent[u]=findParent(parent[u]);
+        }
+        
+        int kruskal(){
+            int cost=0;
+            vector<pair<int,int>> mstEdges;
+            priority_queue<pair<int,pair<int,int>>, vector<pair<int,pair<int,int>>>, greater<pair<int,pair<int,int>>>> edges;
+            for(auto i:adj) for(auto j:i.second) edges.push({j.second,{i.first, j.first}});
+            while(!edges.empty()){
+                auto i = edges.top();
+                edges.pop(); 
+                int u=i.second.first, v=i.second.second;
+                if(findParent(u)!=findParent(v)){
+                    cost+=i.first;
+                    mstEdges.push_back(i.second);
+                    makeUnion(u,v);
+                }   
+            }
+            for(auto i:mstEdges) cout<<i.first<<"->"<<i.second<<" ";
+            cout<<endl;
+            return cost;
         }
         
         ~Graph(){
@@ -349,7 +377,8 @@ int main(){
     cout<<"Weighted ? (Y/N) : ";
     cin>>yes;
     Graph g = Graph(vertices);
-    g.takeInput(yes=='Y'||yes=='y' ? !weighted : weighted);
+    g.takeInput(yes=='Y'|| yes=='y' ? !weighted : weighted);
+    cout<<endl<<"MST weight : "<<g.kruskal();
     return 0;
 }
 

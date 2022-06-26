@@ -1,6 +1,12 @@
 // Given an m x n binary matrix mat, return the distance of the nearest 0 for each cell.
 // The distance between two adjacent cells is 1.
 
+
+// Approach --> visit all cells starting from 0 and mark all 8 neighbouring cells as 1+the value in current cell
+// depicting the distance that have covered until now
+// do the value updations only when the cell is valid and value is 0 
+// if reach the end return result
+
 #include<iostream>
 #include<vector>
 #include<queue>
