@@ -20,18 +20,12 @@ class Sorting{
         
         // O(n^2)
         void bubbleSort(){
-            int temp;
-            for(int i=0;i<9;++i){
-                for(int j=0;j<10-i-1;++j){
-                    if(arr[j+1]<arr[j]){
-                        temp = arr[j];
-                        arr[j] = arr[j+1];
-                        arr[j+1] = temp;
-                    }
-                }
-            }
+            for(int i=0;i<9;++i)
+                for(int j=0;j<10-i-1;++j)
+                    if(arr[j+1]<arr[j]) swap(arr[j],arr[j+1]);
         }
         
+        // O(n^2)
         void insertionSort(){
             int current, j;
             for(int i=1;i<10;++i){
@@ -45,35 +39,24 @@ class Sorting{
             }
         }
         
+        // O(n^2)
         void selectionSort(){
-            int temp, j, k;
+            int j, k;
             for(int i=0;i<9;++i){
-                for(j=k=i; j<10;++j){
-                    if(arr[j]<arr[k]){
-                        k=j;
-                    }
-                }
-                temp = arr[i];
-                arr[i]=arr[k];
-                arr[k]=temp;
+                for(j=k=i; j<10;++j) k=arr[j]<arr[k] ? j : k;
+                swap(arr[i],arr[k]);
             }
         }
         
         // O(nlog(n))
         int quickSortHelper(int l, int h){
-            int pivot = arr[l], i=l, j=h, temp;
+            int pivot = arr[l], i=l, j=h;
             do{
-                do{i++;}while(arr[i]<=pivot);
-                do{j--;}while(arr[j]>pivot);
-                if(i<j){
-                    temp = arr[i];
-                    arr[i]=arr[j];
-                    arr[j]=temp;
-                }
+                do{i++;}while(arr[i]<=pivot); //looking for greater elements than pivot
+                do{j--;}while(arr[j]>pivot);  //looking for smaller elements than pivot
+                if(i<j){swap(arr[i],arr[j]);}
             }while(i<j);
-            temp=arr[l];
-            arr[l]=arr[j];
-            arr[j]=temp;
+            swap(arr[l],arr[j]);
             return j;
         }
         void quickSort(int l, int h){
@@ -135,12 +118,9 @@ class Sorting{
 
         // O(n)
         void countSort(){
-            int max=INT_MIN;
-            for(auto i=arr.begin();i!=arr.end();++i)
-                if(*i>max) max=*i;
+            int max=*max_element(arr.begin(),arr.end());
             vector<int> count(max+1,0);
-            for(auto i=arr.begin();i!=arr.end();++i)
-                count[*i]+=1;
+            for(auto i:arr) count[i]+=1;
             arr.clear();
             for(int i=0;i<count.size();++i)
                 if(count[i]>0){
@@ -149,22 +129,23 @@ class Sorting{
                     i--;
                 }
         }
+        
+        // O(n)
         void bucketSort(){
-            int max=INT_MIN;
-            for(auto i=arr.begin();i!=arr.end();++i)
-                if(*i>max) max=*i;
+            int max=*max_element(arr.begin(),arr.end());
             vector<vector<int>> bin(max+1);
-            for(auto i=arr.begin();i!=arr.end();++i)
-                bin[*i].push_back(*i);
+            for(auto i:arr) bin[i].push_back(i);
             arr.clear();
             for(int i=0;i<bin.size();++i){
                 if(bin[i].size()!=0){
-                    for(auto j=bin[i].begin();j!=bin[i].end();++j){
-                        arr.push_back(*j);
+                    for(auto j:bin[i]){
+                        arr.push_back(j);
                     }
                 }
             }
         }
+        
+        // Based on modulus function
         void radixSort(){
 
         }
