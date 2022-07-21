@@ -133,12 +133,12 @@ class Graph{
         bool cycleDfsUndirected(int start, int parent){
             if(visited[start]==0){
                 visited[start]=1;
-                for(auto i:adj[start]){
-                    if(visited[i.first]==0){
-                        cycleDfsUndirected(i.first,start);
+                for(auto [i,j]:adj[start]){
+                    if(visited[i]==0){
+                        cycleDfsUndirected(i,start);
                     }
                     else{
-                        if(parent!=i.first){
+                        if(parent!=i){
                             return true;
                         }
                     }

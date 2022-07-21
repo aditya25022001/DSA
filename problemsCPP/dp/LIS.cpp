@@ -13,7 +13,7 @@ int f(int i, int p, int& n, vector<vector<int>>& d, vector<int>& a){
 }
 
 int main(){
-    vector<int> a ={10,9,2,5,3,7,101,18};
+    vector<int> a ={1,2,3,4,5};
     int n=a.size();
     vector<vector<int>> d(n,vector<int>(n,-1));
     cout<<f(0,-1,n,d,a);
